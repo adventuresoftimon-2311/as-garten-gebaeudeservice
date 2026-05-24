@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const recipient = 'azadservice1988@gmail.com';
       const subject = `Neue Anfrage AS Garten- und Gebäudeservice - ${name}`;
       
-      const body = `Hallo Herr Azad,
+      const body = `Hallo Herr Sheikhi,
 
 Sie haben eine neue Anfrage über das Kontaktformular erhalten:
 
