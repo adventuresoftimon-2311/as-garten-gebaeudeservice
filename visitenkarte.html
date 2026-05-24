@@ -35,17 +35,16 @@
       background-color: #ffffff;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
       overflow: hidden;
       page-break-after: always;
-      /* Safety margins: 5.5mm from bleed edge */
-      padding: 6mm;
+      /* Safety margin: 6mm from the bleed edge ensures elements are safe from trimming */
+      padding: 8mm 8mm;
     }
     
-    /* Front Side Specifics */
+    /* Front Side: Centered Logo */
     .card-front {
-      background-color: #ffffff;
+      justify-content: center;
+      align-items: center;
     }
     
     .logo {
@@ -55,8 +54,8 @@
     }
     
     .logo-icon {
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       background-color: #0F3223;
       color: #D4AF37;
       border-radius: 8px;
@@ -64,7 +63,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       border: 1.5px solid #D4AF37;
       font-family: 'Outfit', sans-serif;
     }
@@ -78,13 +77,13 @@
     }
     
     .logo-text span:first-child {
-      font-size: 1.7rem;
+      font-size: 1.75rem;
       font-weight: 800;
       color: #0F3223;
     }
     
     .logo-subtitle {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 600;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -92,51 +91,38 @@
       margin-top: 3px;
     }
     
-    /* Back Side Specifics */
+    /* Back Side: Left-aligned and structured */
     .card-back {
-      background-color: #ffffff;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 8mm 10mm;
-    }
-    
-    .back-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #E2E6E3;
-      padding-bottom: 2mm;
-    }
-    
-    .back-logo-icon {
-      width: 24px;
-      height: 24px;
-      background-color: #0F3223;
-      color: #D4AF37;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 0.8rem;
-      border: 1px solid #D4AF37;
-      font-family: 'Outfit', sans-serif;
+      align-items: flex-start;
+      padding-left: 10mm; /* Extra left padding to offset bleed and look perfectly balanced */
     }
     
-    .back-header-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #0F3223;
+    .logo-small {
+      margin-bottom: 5mm;
+    }
+    
+    .logo-small .logo-icon {
+      width: 32px;
+      height: 32px;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      border: 1px solid #D4AF37;
+    }
+    
+    .logo-small .logo-text span:first-child {
+      font-size: 1.25rem;
+    }
+    
+    .logo-small .logo-subtitle {
+      font-size: 0.55rem;
+      margin-top: 2px;
     }
     
     .contact-details {
       display: flex;
       flex-direction: column;
-      gap: 3.5mm;
-      width: 100%;
-      margin-top: 1mm;
+      gap: 3mm;
     }
     
     .contact-item {
@@ -149,22 +135,20 @@
       text-decoration: none;
     }
     
+    .icon-wrapper {
+      width: 18px; /* Fixed width to make values perfectly flush */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
     .contact-item svg {
       color: #0F3223;
       flex-shrink: 0;
     }
     
-    .contact-label {
-      font-weight: 500;
-      color: #626A65;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      width: 12mm;
-    }
-    
     .contact-value {
-      font-weight: 600;
+      font-weight: 500;
       color: #0F3223;
     }
   </style>
@@ -184,30 +168,36 @@
 
   <!-- PAGE 2: BACK -->
   <div class="card card-back">
-    <div class="back-header">
-      <span class="back-header-title">AS Garten- & Gebäudeservice</span>
-      <div class="back-logo-icon">AS</div>
+    <div class="logo logo-small">
+      <div class="logo-icon">AS</div>
+      <div class="logo-text">
+        <span>AS Garten- &</span>
+        <span class="logo-subtitle">Gebäudeservice</span>
+      </div>
     </div>
     
     <div class="contact-details">
       <!-- Phone -->
       <div class="contact-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-        <span class="contact-label">Tel</span>
+        <div class="icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        </div>
         <span class="contact-value">0176 40174981</span>
       </div>
       
       <!-- Email -->
       <div class="contact-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-        <span class="contact-label">Mail</span>
+        <div class="icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        </div>
         <span class="contact-value">azadservice1988@gmail.com</span>
       </div>
       
       <!-- Web -->
       <div class="contact-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-        <span class="contact-label">Web</span>
+        <div class="icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        </div>
         <span class="contact-value">www.as-garten-gebäudeservice.de</span>
       </div>
     </div>
