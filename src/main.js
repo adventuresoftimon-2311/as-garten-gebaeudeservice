@@ -62,9 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const openCalendly = (e) => {
       e.preventDefault();
-      // Use clean Calendly pre-fills or simply set source URL
-      // Calendly URL for Azad Garten- und Gebäudeservice (placeholder or simple booking page)
-      const calendlyUrl = 'https://calendly.com/azadservice1988/30min?hide_gdpr_banner=1&primary_color=0f3223';
+      const calendlyUrl = 'https://calendly.com/azadservice1988/30min?hide_gdpr_banner=1&primary_color=0b531d';
       
       if (iframe && !iframe.getAttribute('src')) {
         iframe.setAttribute('src', calendlyUrl);
@@ -91,6 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target === calendlyModal) {
         closeCalendly();
       }
+    });
+  }
+
+  // --- Inline Calendly Widget Loader (GDPR compliant) ---
+  const loadCalendlyBtn = document.getElementById('loadCalendlyBtn');
+  const calendlyContainer = document.getElementById('calendly-container');
+  
+  if (loadCalendlyBtn && calendlyContainer) {
+    loadCalendlyBtn.addEventListener('click', () => {
+      // Clear placeholder and insert Calendly inline widget code
+      calendlyContainer.innerHTML = '<div class="calendly-inline-widget" data-url="https://calendly.com/azadservice1988/30min?primary_color=0b531d" style="min-width:320px;height:700px;"></div>';
+      calendlyContainer.style.padding = '0';
+      calendlyContainer.style.border = 'none';
+      calendlyContainer.style.boxShadow = 'none';
+      calendlyContainer.style.background = 'transparent';
+      
+      // Dynamic loading of Calendly widget script
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://assets.calendly.com/assets/external/widget.js';
+      script.async = true;
+      document.body.appendChild(script);
     });
   }
 
