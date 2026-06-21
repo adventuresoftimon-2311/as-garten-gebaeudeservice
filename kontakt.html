@@ -32,7 +32,7 @@
       <nav class="nav-menu" aria-label="Hauptnavigation">
         <a href="index.html" class="nav-link">Startseite</a>
         <a href="gartenpflege.html" class="nav-link">Gartenpflege</a>
-        <a href="gebaeudereinigung.html" class="nav-link">Gebäudereinigung</a>
+        <a href="gebaeudereinigung.html" class="nav-link">Hausreinigung</a>
         <a href="preise.html" class="nav-link">Preise</a>
         <a href="ueber-uns.html" class="nav-link">Über uns</a>
         <a href="kontakt.html" class="nav-link">Kontakt</a>
@@ -57,7 +57,7 @@
     <nav class="mobile-nav-links" aria-label="Mobile Navigation">
       <a href="index.html" class="nav-link">Startseite</a>
       <a href="gartenpflege.html" class="nav-link">Gartenpflege</a>
-      <a href="gebaeudereinigung.html" class="nav-link">Gebäudereinigung</a>
+      <a href="gebaeudereinigung.html" class="nav-link">Hausreinigung</a>
       <a href="preise.html" class="nav-link">Preise</a>
       <a href="ueber-uns.html" class="nav-link">Über uns</a>
       <a href="kontakt.html" class="nav-link">Kontakt</a>
@@ -113,8 +113,9 @@
               <select id="service" class="form-control" required>
                 <option value="" disabled selected>Bitte wählen...</option>
                 <option value="Gartenpflege">Gartenpflege</option>
-                <option value="Gebäudereinigung">Gebäudereinigung</option>
-                <option value="Beides / Sonstiges">Gartenpflege & Gebäudereinigung</option>
+                <option value="Hausreinigung">Hausreinigung</option>
+                <option value="Fensterreinigung">Fensterreinigung</option>
+                <option value="Beides / Sonstiges">Gartenpflege &amp; Hausreinigung</option>
               </select>
             </div>
             
@@ -194,7 +195,7 @@
           <nav class="footer-links" aria-label="Footer Navigation">
             <a href="index.html">Startseite</a>
             <a href="gartenpflege.html">Gartenpflege</a>
-            <a href="gebaeudereinigung.html">Gebäudereinigung</a>
+            <a href="gebaeudereinigung.html">Hausreinigung</a>
             <a href="preise.html">Preise</a>
             <a href="ueber-uns.html">Über uns</a>
             <a href="kontakt.html">Kontakt</a>
@@ -244,8 +245,10 @@
           // Preselect option matching value
           if (serviceParam === 'gartenpflege') {
             select.value = 'Gartenpflege';
-          } else if (serviceParam === 'gebaeudereinigung') {
-            select.value = 'Gebäudereinigung';
+          } else if (serviceParam === 'hausreinigung') {
+            select.value = 'Hausreinigung';
+          } else if (serviceParam === 'fensterreinigung') {
+            select.value = 'Fensterreinigung';
           }
         }
       }
