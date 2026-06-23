@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       // Construct mailto parts
-      const recipient = 'azadservice1988@gmail.com';
+      const recipient = 'asservice19888@gmail.com';
       const subject = `Neue Anfrage AS Garten- und Gebäudeservice - ${name}`;
       
       const body = `Hallo Herr Sheikhi,
