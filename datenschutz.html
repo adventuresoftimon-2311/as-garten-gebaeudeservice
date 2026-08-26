@@ -17,16 +17,17 @@
       .garden-cell {
         background-color: #8C6239;
         border: 3px solid #5C3A21;
-        border-radius: 4px;
+        border-radius: 6px;
         position: relative;
-        cursor: pointer;
+        cursor: crosshair;
         transition: background-color 0.15s, border-color 0.15s;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 60px;
-        height: 60px;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        width: 75px;
+        height: 75px;
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.25);
+        overflow: visible;
       }
       .garden-cell:hover {
         background-color: #9C7249;
@@ -44,37 +45,100 @@
         opacity: 0.4;
         pointer-events: none;
       }
-      .plant-svg {
+      .mole-svg {
         width: 100%;
         height: 100%;
-        animation: sproutAnimation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: molePopUp 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.25);
         image-rendering: pixelated;
         pointer-events: none;
-      }
-      @keyframes sproutAnimation {
-        from { transform: scale(0) translateY(10px); }
-        to { transform: scale(1) translateY(0); }
-      }
-      .particle {
         position: absolute;
-        width: 6px;
-        height: 6px;
+        bottom: 0;
+      }
+      @keyframes molePopUp {
+        from { transform: translateY(50px) scaleY(0.5); }
+        to { transform: translateY(0) scaleY(1); }
+      }
+      .mole-svg.whacked {
+        animation: moleSquish 0.1s ease-out;
+      }
+      @keyframes moleSquish {
+        0% { transform: scaleY(1); }
+        50% { transform: scaleY(0.4) translateY(10px); }
+        100% { transform: scaleY(0.8) translateY(5px); }
+      }
+      .hole-svg {
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
         pointer-events: none;
-        animation: particleAnim 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        position: absolute;
+        bottom: 0;
+        opacity: 0.8;
       }
-      @keyframes particleAnim {
-        0% { transform: translate(0, 0) scale(1); opacity: 1; }
-        100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+      .hammer-effect {
+        position: absolute;
+        width: 45px;
+        height: 45px;
+        pointer-events: none;
+        transform-origin: bottom right;
+        animation: hammerSwing 0.12s ease-out forwards;
+        z-index: 100;
+        image-rendering: pixelated;
       }
-      .shake {
-        animation: shake 0.2s ease-in-out;
+      @keyframes hammerSwing {
+        0% { transform: translate(-10px, -20px) rotate(45deg); opacity: 1; }
+        70% { transform: translate(5px, 5px) rotate(-15deg); opacity: 1; }
+        100% { transform: translate(5px, 5px) rotate(-15deg); opacity: 0; }
       }
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-2px); }
-        75% { transform: translateX(2px); }
+      .heart {
+        color: #E25858;
+        font-size: 1.2rem;
+        display: inline-block;
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+      }
+      .heart.lost {
+        transform: scale(0);
+        opacity: 0.2;
+      }
+      .game-over-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 50, 35, 0.95);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        border-radius: 8px;
+        z-index: 50;
+        animation: fadeIn 0.3s ease-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .btn-retro {
+        background: #D4AF37;
+        color: #0F3223;
+        border: 3px solid #0F3223;
+        border-radius: 4px;
+        padding: 6px 16px;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.1s, background-color 0.1s;
+        box-shadow: 0 4px 0 #081d14;
+      }
+      .btn-retro:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 #081d14;
+      }
+      .btn-retro:hover {
+        background: #F2CA4B;
       }
     </style>
+    
     <div style="max-width: 500px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
       <div>
         <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem; font-weight: 700; color: #0F3223; font-family: 'Outfit', sans-serif;">Dieses Unternehmen gibt es nicht mehr.</h1>
@@ -82,19 +146,32 @@
       </div>
       
       <!-- Mini Game Box -->
-      <div style="background: white; border: 4px solid #0F3223; border-radius: 8px; padding: 1.5rem; width: 100%; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08); display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+      <div style="background: white; border: 4px solid #0F3223; border-radius: 8px; padding: 1.5rem; width: 100%; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08); display: flex; flex-direction: column; align-items: center; gap: 1rem; position: relative;">
+        
+        <!-- Game Over Overlay -->
+        <div id="gameOverOverlay" class="game-over-overlay" style="display: none;">
+          <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; margin: 0; color: #D4AF37;">GAME OVER</h2>
+          <p id="finalScoreText" style="font-family: monospace; font-size: 1.2rem; margin: 0;">Getroffene Maulwürfe: 0</p>
+          <button id="restartBtn" class="btn-retro">Nochmal spielen</button>
+        </div>
+
         <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; font-family: 'Outfit', sans-serif; font-weight: 700; color: #0F3223; border-bottom: 2px solid #E2E6E3; padding-bottom: 0.5rem;">
-          <span style="font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">🎮 AS Mini-Garten</span>
-          <span id="gameScore" style="font-size: 1.1rem; color: #D4AF37; background: #0F3223; padding: 2px 10px; border-radius: 4px; font-family: monospace;">Pflanzen geerntet: 0</span>
+          <span style="font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">🔨 Hau den Maulwurf!</span>
+          <div id="livesContainer" style="display: flex; gap: 4px; align-items: center;">
+            <span class="heart">❤️</span>
+            <span class="heart">❤️</span>
+            <span class="heart">❤️</span>
+          </div>
+          <span id="gameScore" style="font-size: 1.1rem; color: #D4AF37; background: #0F3223; padding: 2px 10px; border-radius: 4px; font-family: monospace;">Punkte: 0</span>
         </div>
         
-        <!-- 4x4 Grid -->
-        <div id="gardenGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 280px; height: 280px; background: #B58A55; border: 5px solid #5C3A21; padding: 10px; border-radius: 6px; box-shadow: inset 0 0 15px rgba(0,0,0,0.3);">
+        <!-- 3x3 Grid -->
+        <div id="gardenGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 280px; height: 280px; background: #B58A55; border: 5px solid #5C3A21; padding: 12px; border-radius: 6px; box-shadow: inset 0 0 15px rgba(0,0,0,0.3); overflow: visible;">
           <!-- Cells generated by JS -->
         </div>
         
         <p style="font-size: 0.85rem; color: #626A65; margin: 0; font-style: italic; font-family: 'Inter', sans-serif;">
-          Klicke auf wachsende Pflanzen, um sie zu ernten! 🌱 ➡️ 🌸 ➡️ 🧺
+          Hau den Maulwurf mit dem Hammer! Er wird mit der Zeit immer schneller! 🦫💨
         </p>
       </div>
     </div>
@@ -103,68 +180,77 @@
       document.addEventListener('DOMContentLoaded', () => {
         const gridContainer = document.getElementById('gardenGrid');
         const scoreDisplay = document.getElementById('gameScore');
-        if (!gridContainer || !scoreDisplay) return;
+        const livesContainer = document.getElementById('livesContainer');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const finalScoreText = document.getElementById('finalScoreText');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        if (!gridContainer || !scoreDisplay || !livesContainer || !gameOverOverlay) return;
 
         let score = 0;
-        const gridState = Array(16).fill(null); // stores { stage: 1, type: 'flower' }
+        let lives = 3;
+        let activeMoleIndex = null;
+        let moleTimeout = null;
+        let gameInterval = null;
+        let isGameOver = false;
+        
+        // Difficulty controls
+        let baseSpawnInterval = 1500;
+        let baseMoleTime = 1200;
 
-        const sproutSvg = `
-          <svg viewBox="0 0 16 16" class="plant-svg" shape-rendering="crispEdges">
-            <rect x="7" y="7" width="2" height="7" fill="#4E8A10" />
-            <rect x="8" y="10" width="2" height="2" fill="#4E8A10" />
-            <rect x="5" y="6" width="2" height="2" fill="#6BB31E" />
-            <rect x="9" y="8" width="2" height="2" fill="#6BB31E" />
-            <rect x="4" y="7" width="1" height="1" fill="#4E8A10" />
-            <rect x="11" y="9" width="1" height="1" fill="#4E8A10" />
+        const emptyHoleSvg = `
+          <svg viewBox="0 0 16 16" class="hole-svg" shape-rendering="crispEdges">
+            <ellipse cx="8" cy="13" rx="7" ry="3" fill="#3D2511" />
+            <ellipse cx="8" cy="13" rx="5" ry="1.5" fill="#1C1007" />
           </svg>
         `;
 
-        const flowerSvg = `
-          <svg viewBox="0 0 16 16" class="plant-svg" shape-rendering="crispEdges">
-            <rect x="7" y="6" width="2" height="8" fill="#4E8A10" />
-            <rect x="5" y="9" width="2" height="2" fill="#4E8A10" />
-            <rect x="9" y="8" width="2" height="2" fill="#4E8A10" />
-            <rect x="4" y="8" width="1" height="1" fill="#6BB31E" />
-            <rect x="11" y="7" width="1" height="1" fill="#6BB31E" />
-            <rect x="5" y="3" width="6" height="3" fill="#D12323" />
-            <rect x="6" y="2" width="4" height="5" fill="#D12323" />
-            <rect x="7" y="3" width="2" height="2" fill="#E85D5D" />
-            <rect x="9" y="4" width="1" height="1" fill="#A81515" />
+        const moleSvg = `
+          <svg viewBox="0 0 16 16" class="mole-svg" shape-rendering="crispEdges">
+            <ellipse cx="8" cy="13" rx="7" ry="3" fill="#3D2511" />
+            <rect x="4" y="6" width="8" height="8" fill="#5A3A22" />
+            <rect x="5" y="5" width="6" height="1" fill="#5A3A22" />
+            <rect x="3" y="8" width="10" height="6" fill="#5A3A22" />
+            <rect x="5" y="7" width="1" height="1" fill="#000000" />
+            <rect x="10" y="7" width="1" height="1" fill="#000000" />
+            <rect x="7" y="8" width="2" height="1" fill="#FFC0CB" />
+            <rect x="8" y="9" width="1" height="1" fill="#FFC0CB" />
+            <rect x="4" y="8" width="1" height="1" fill="#FF8080" opacity="0.6" />
+            <rect x="11" y="8" width="1" height="1" fill="#FF8080" opacity="0.6" />
+            <rect x="2" y="9" width="2" height="2" fill="#EDD5C5" />
+            <rect x="12" y="9" width="2" height="2" fill="#EDD5C5" />
           </svg>
         `;
 
-        const bushSvg = `
-          <svg viewBox="0 0 16 16" class="plant-svg" shape-rendering="crispEdges">
-            <rect x="7" y="10" width="2" height="4" fill="#3D2817" />
-            <rect x="4" y="5" width="8" height="6" fill="#1C5E20" />
-            <rect x="3" y="6" width="10" height="4" fill="#1C5E20" />
-            <rect x="5" y="4" width="6" height="8" fill="#2E7D32" />
-            <rect x="6" y="3" width="4" height="2" fill="#4CAF50" />
-            <rect x="4" y="6" width="2" height="2" fill="#E91E63" />
-            <rect x="10" y="7" width="2" height="2" fill="#E91E63" />
-            <rect x="7" y="4" width="2" height="2" fill="#E91E63" />
-            <rect x="7" y="8" width="2" height="2" fill="#E91E63" />
+        const dizzyMoleSvg = `
+          <svg viewBox="0 0 16 16" class="mole-svg whacked" shape-rendering="crispEdges">
+            <ellipse cx="8" cy="13" rx="7" ry="3" fill="#3D2511" />
+            <rect x="4" y="9" width="8" height="5" fill="#5A3A22" />
+            <rect x="3" y="10" width="10" height="4" fill="#5A3A22" />
+            <rect x="5" y="10" width="1" height="1" fill="#000" />
+            <rect x="6" y="11" width="1" height="1" fill="#000" />
+            <rect x="10" y="10" width="1" height="1" fill="#000" />
+            <rect x="9" y="11" width="1" height="1" fill="#000" />
+            <rect x="7" y="11" width="2" height="1" fill="#FFC0CB" />
+            <rect x="2" y="11" width="2" height="2" fill="#EEDDDF" opacity="0.5" />
+            <rect x="12" y="11" width="2" height="2" fill="#EEDDDF" opacity="0.5" />
+            <polygon points="1,2 2,4 3,3" fill="#FFD700" />
+            <polygon points="13,2 14,4 15,3" fill="#FFD700" />
           </svg>
         `;
 
-        const goldenSvg = `
-          <svg viewBox="0 0 16 16" class="plant-svg" shape-rendering="crispEdges">
-            <rect x="7" y="6" width="2" height="8" fill="#A67C1E" />
-            <rect x="5" y="3" width="6" height="3" fill="#D4AF37" />
-            <rect x="6" y="2" width="4" height="5" fill="#D4AF37" />
-            <rect x="7" y="3" width="2" height="2" fill="#FFF2B2" />
-            <rect x="9" y="4" width="1" height="1" fill="#8C6615" />
+        const hammerSvg = `
+          <svg viewBox="0 0 16 16" class="hammer-effect" shape-rendering="crispEdges">
+            <rect x="3" y="9" width="3" height="6" fill="#8B5A2B" />
+            <rect x="4" y="10" width="1" height="5" fill="#CD853F" />
+            <rect x="5" y="4" width="8" height="5" fill="#708090" />
+            <rect x="6" y="3" width="6" height="1" fill="#708090" />
+            <rect x="6" y="5" width="6" height="3" fill="#D3D3D3" />
           </svg>
         `;
 
-        const plantTypes = [
-          { type: 'flower', svg: flowerSvg, value: 1 },
-          { type: 'bush', svg: bushSvg, value: 2 },
-          { type: 'golden', svg: goldenSvg, value: 5 }
-        ];
-
-        // Synthesize a retro jump/pop beep
-        function playPopSound() {
+        // Synthesize Sound Effects
+        function playSound(type) {
           try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = ctx.createOscillator();
@@ -172,123 +258,175 @@
             osc.connect(gain);
             gain.connect(ctx.destination);
             
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(150, ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1);
-            
-            gain.gain.setValueAtTime(0.15, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
-            
-            osc.start();
-            osc.stop(ctx.currentTime + 0.12);
+            if (type === 'hit') {
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(150, ctx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.08);
+              gain.gain.setValueAtTime(0.2, ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+              osc.start();
+              osc.stop(ctx.currentTime + 0.1);
+            } else if (type === 'miss') {
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(220, ctx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.25);
+              gain.gain.setValueAtTime(0.15, ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+              osc.start();
+              osc.stop(ctx.currentTime + 0.25);
+            } else if (type === 'gameover') {
+              osc.type = 'sine';
+              gain.gain.setValueAtTime(0.15, ctx.currentTime);
+              
+              osc.frequency.setValueAtTime(440, ctx.currentTime);
+              osc.frequency.setValueAtTime(349, ctx.currentTime + 0.15);
+              osc.frequency.setValueAtTime(293, ctx.currentTime + 0.3);
+              osc.frequency.setValueAtTime(220, ctx.currentTime + 0.45);
+              
+              gain.gain.setValueAtTime(0.15, ctx.currentTime);
+              gain.gain.setValueAtTime(0.15, ctx.currentTime + 0.45);
+              gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.75);
+              
+              osc.start();
+              osc.stop(ctx.currentTime + 0.75);
+            }
           } catch (e) {}
         }
 
-        // Particle effect
-        function createHarvestParticles(parent, color) {
-          const count = 8;
-          for (let i = 0; i < count; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.backgroundColor = color;
-            particle.style.left = '50%';
-            particle.style.top = '50%';
-            
-            // Random direction
-            const angle = Math.random() * Math.PI * 2;
-            const distance = 20 + Math.random() * 30;
-            const dx = Math.cos(angle) * distance;
-            const dy = Math.sin(angle) * distance - 10; // drift upward slightly
-            
-            particle.style.setProperty('--dx', `${dx}px`);
-            particle.style.setProperty('--dy', `${dy}px`);
-            
-            parent.appendChild(particle);
-            setTimeout(() => particle.remove(), 600);
-          }
-        }
-
-        // Initialize 4x4 Grid
-        for (let i = 0; i < 16; i++) {
+        // Initialize 3x3 Grid
+        for (let i = 0; i < 9; i++) {
           const cell = document.createElement('div');
           cell.className = 'garden-cell';
           cell.dataset.index = i;
+          cell.innerHTML = emptyHoleSvg;
           
-          cell.addEventListener('click', () => {
+          cell.addEventListener('mousedown', (e) => {
+            if (isGameOver) return;
             const index = parseInt(cell.dataset.index);
-            const state = gridState[index];
             
-            if (state) {
-              playPopSound();
+            const hammer = document.createElement('div');
+            hammer.innerHTML = hammerSvg;
+            const hammerEl = hammer.firstElementChild;
+            cell.appendChild(hammerEl);
+            setTimeout(() => hammerEl.remove(), 120);
+
+            if (index === activeMoleIndex) {
+              playSound('hit');
+              score++;
+              scoreDisplay.innerText = `Punkte: ${score}`;
               
-              let pColor = '#6BB31E'; // leaf green
-              if (state.stage === 2) {
-                if (state.type === 'flower') pColor = '#D12323';
-                if (state.type === 'bush') pColor = '#E91E63';
-                if (state.type === 'golden') pColor = '#D4AF37';
-              }
+              cell.innerHTML = emptyHoleSvg + dizzyMoleSvg;
+              activeMoleIndex = null;
+              clearTimeout(moleTimeout);
               
-              createHarvestParticles(cell, pColor);
-              
-              // Clear state and UI
-              gridState[index] = null;
-              cell.innerHTML = '';
-              
-              // Add score
-              const points = state.stage === 2 ? state.value : 1;
-              score += points;
-              scoreDisplay.innerText = `Pflanzen geerntet: ${score}`;
-            } else {
-              // Shake empty cell feedback
-              cell.classList.add('shake');
-              setTimeout(() => cell.classList.remove('shake'), 200);
+              setTimeout(() => {
+                if (activeMoleIndex !== index) {
+                  cell.innerHTML = emptyHoleSvg;
+                }
+              }, 300);
             }
           });
           
           gridContainer.appendChild(cell);
         }
 
-        // Game Loop: Spawns/grows plants
-        function gameTick() {
-          const emptyIndices = [];
-          const activeIndices = [];
-          
-          gridState.forEach((state, idx) => {
-            if (state === null) emptyIndices.push(idx);
-            else if (state.stage < 2) activeIndices.push(idx); // can grow more
-          });
-
-          // 1. Sprout a new plant
-          if (emptyIndices.length > 0 && Math.random() < 0.6) {
-            const spawnIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-            gridState[spawnIdx] = { stage: 1, type: 'sprout' };
-            
-            const cell = gridContainer.children[spawnIdx];
-            cell.innerHTML = sproutSvg;
-          }
-
-          // 2. Grow existing sprouts
-          activeIndices.forEach(idx => {
-            if (Math.random() < 0.5) {
-              const state = gridState[idx];
-              state.stage = 2;
-              
-              // Select random adult plant type (with rarity weights)
-              const randVal = Math.random();
-              let selected = plantTypes[0]; // 70% flower
-              if (randVal > 0.95) selected = plantTypes[2]; // 5% golden
-              else if (randVal > 0.70) selected = plantTypes[1]; // 25% bush
-              
-              state.type = selected.type;
-              state.value = selected.value;
-              
-              const cell = gridContainer.children[idx];
-              cell.innerHTML = selected.svg;
-            }
+        function updateLivesUI() {
+          const hearts = livesContainer.querySelectorAll('.heart');
+          hearts.forEach((h, i) => {
+            if (i >= lives) h.classList.add('lost');
+            else h.classList.remove('lost');
           });
         }
 
-        setInterval(gameTick, 1200);
+        function triggerGameOver() {
+          isGameOver = true;
+          clearInterval(gameInterval);
+          clearTimeout(moleTimeout);
+          playSound('gameover');
+          
+          finalScoreText.innerText = `Getroffene Maulwürfe: ${score}`;
+          gameOverOverlay.style.display = 'flex';
+        }
+
+        function spawnMole() {
+          if (isGameOver) return;
+          
+          if (activeMoleIndex !== null) {
+            const oldCell = gridContainer.children[activeMoleIndex];
+            oldCell.innerHTML = emptyHoleSvg;
+            
+            lives--;
+            updateLivesUI();
+            playSound('miss');
+            
+            if (lives <= 0) {
+              triggerGameOver();
+              return;
+            }
+          }
+
+          let newIndex;
+          do {
+            newIndex = Math.floor(Math.random() * 9);
+          } while (newIndex === activeMoleIndex);
+          
+          activeMoleIndex = newIndex;
+          const cell = gridContainer.children[newIndex];
+          cell.innerHTML = emptyHoleSvg + moleSvg;
+          
+          const currentMoleTime = Math.max(350, baseMoleTime - score * 35);
+          
+          moleTimeout = setTimeout(() => {
+            if (activeMoleIndex === newIndex) {
+              cell.innerHTML = emptyHoleSvg;
+              activeMoleIndex = null;
+              lives--;
+              updateLivesUI();
+              playSound('miss');
+              
+              if (lives <= 0) {
+                triggerGameOver();
+              } else {
+                scheduleNextSpawn();
+              }
+            }
+          }, currentMoleTime);
+        }
+
+        function scheduleNextSpawn() {
+          if (isGameOver) return;
+          const currentSpawnInterval = Math.max(500, baseSpawnInterval - score * 45);
+          
+          clearInterval(gameInterval);
+          gameInterval = setInterval(() => {
+            spawnMole();
+          }, currentSpawnInterval);
+        }
+
+        function startGame() {
+          score = 0;
+          lives = 3;
+          isGameOver = false;
+          activeMoleIndex = null;
+          baseSpawnInterval = 1500;
+          baseMoleTime = 1200;
+          
+          scoreDisplay.innerText = `Punkte: 0`;
+          gameOverOverlay.style.display = 'none';
+          
+          Array.from(gridContainer.children).forEach(cell => {
+            cell.innerHTML = emptyHoleSvg;
+          });
+          
+          updateLivesUI();
+          scheduleNextSpawn();
+        }
+
+        restartBtn.addEventListener('click', () => {
+          startGame();
+        });
+
+        startGame();
       });
     </script>
   </div>
